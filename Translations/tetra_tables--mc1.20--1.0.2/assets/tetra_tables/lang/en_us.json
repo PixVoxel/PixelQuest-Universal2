@@ -1,0 +1,16 @@
+{
+	"block.tetra_tables.tetra_table_oak": "Workbench (oak)",
+	"block.tetra_tables.tetra_table_spruce": "Workbench (spruce)",
+	"block.tetra_tables.tetra_table_birch": "Workbench (birch)",
+	"block.tetra_tables.tetra_table_jungle": "Workbench (jungle)",
+	"block.tetra_tables.tetra_table_dark_oak": "Workbench (dark oak)",
+	"block.tetra_tables.tetra_table_acacia": "Workbench (acacia)",
+	"block.tetra_tables.tetra_table_mangrove": "Workbench (mangrove)",
+	"block.tetra_tables.tetra_table_cherry": "Workbench (cherry)",
+	"block.tetra_tables.tetra_table_crimson": "Workbench (crimson)",
+	"block.tetra_tables.tetra_table_warped": "Workbench (warped)",
+
+	"message.tetra_tables.table_obscured": "Workbench is obscured.",
+	"message.tetra_tables.tableNotFound1": "There is no workbench for that wood. Add Workshop for handsome adventurer mod.",
+	"message.tetra_tables.tableNotFound2": "There is no workbench for that wood. Very curious."
+}
