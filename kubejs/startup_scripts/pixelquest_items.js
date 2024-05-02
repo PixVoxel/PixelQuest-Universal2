@@ -6,4 +6,8 @@ StartupEvents.registry('item', event => {
         .unstackable()
         .rarity('Epic')
         .texture("pixelquest:item/research_blueprint")
+    event.create('pixelquest_netherite_emblem')
+        .unstackable()
+        .rarity('ie_masterwork')
+        .texture("pixelquest:item/netherite_emblem")
 })

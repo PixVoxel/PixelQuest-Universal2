@@ -3,6 +3,13 @@
 	"chapter.pixelquest.guide":"서버 가이드",
  	"chapter_group.pixelquest.chapter_group_1":"길잡의 별의 장",
 
+	"_comment.curios.pixelquest":"Curios",
+	"curios.identifier.emblem":"문장",
+
+	"_comment.effect.pixelquest":"Effect",
+	"effect.kubejs.reflection":"반사",
+	"effect.kubejs.reflection.desc":"받은 피해를 주변의 적에게 그대로 돌려줍니다.",
+
 	"_comment.quest.pixelquest.guide.jeirei":"JEI Guide",
 	"quest.pixelquest.guide.jeirei.title":"JEI(REI) 사용 방법",
 	"quest.pixelquest.guide.jeirei.subtitle":"충분한 아이템",
@@ -55,6 +62,7 @@
 	"_comment.item.pixelquest":"Custom Items",
 	"item.kubejs.pixelquest_blueprint":"빈 청사진",
 	"item.kubejs.pixelquest_research_blueprint":"연구 청사진",
+	"item.kubejs.pixelquest_netherite_emblem":"네더라이트의 문장",
 	
 	"_comment.block.pixelquest":"Custom Blocks",
 	"block.kubejs.pixelquest_research_table":"연구 탁자",
