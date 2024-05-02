@@ -12,8 +12,8 @@ EntityEvents.spawned("cataclysm:netherite_monstrosity", event => {
 
 EntityEvents.hurt("cataclysm:netherite_monstrosity", event => {
     let monstrosity = event.getEntity();
-    if (monstrosity.persistentData.getBoolean(player.uuid)) event.cancel();
     let player = event.source.getActual();
+    if (monstrosity.persistentData.getBoolean(player.uuid)) event.cancel();
     if (monstrosity == null || player == null) return
     if (monstrosity.persistentData.rageStack % 5 == 4) {
         let randomNumber = parseInt(Math.floor((Math.random() * 99) + 1) % 2)
