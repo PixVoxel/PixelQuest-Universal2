@@ -1,32 +1,18 @@
 let $DamageSources = Java.loadClass('net.minecraft.world.damagesource.DamageSources')
 let dSource = Utils.lazy(() => new $DamageSources(Utils.server.registryAccess()))
 
-let monstrosity_list = new Array()
-
 EntityEvents.checkSpawn("cataclysm:netherite_monstrosity", event => {
     let monstrosity = event.getEntity();
     monstrosity.persistentData.rageStack = 0;
-    monstrosity.persistentData.invTime = 0;
 })
 
 EntityEvents.spawned("cataclysm:netherite_monstrosity", event => {
     let monstrosity = event.getEntity();
-    monstrosity_list.push(monstrosity.uuid)
-})
-
-LevelEvents.tick(event => {
-    monstrosity_list.forEach(mon_uuid => {
-        let entity = event.level.getEntity(mon_uuid);
-        if (entity == null) return
-        if (entity.persistentData.invTime > 0) {
-            entity.persistentData.invTime -= 1
-        }
-    })
 })
 
 EntityEvents.hurt("cataclysm:netherite_monstrosity", event => {
     let monstrosity = event.getEntity();
-    if (monstrosity.persistentData.invTime > 0) event.cancel();
+    if (monstrosity.persistentData.getBoolean(player.uuid)) event.cancel();
     let player = event.source.getActual();
     if (monstrosity == null || player == null) return
     if (monstrosity.persistentData.rageStack % 5 == 4) {
@@ -42,7 +28,8 @@ EntityEvents.hurt("cataclysm:netherite_monstrosity", event => {
         else player.statusMessage = Text.translate("pixelquest.bosses.netherite_monstrosity.warning", reflectCount.toFixed(0))
         monstrosity.persistentData.rageStack += 1;
     }
-    monstrosity.persistentData.invTime = 4;
+    monstrosity.persistentData.putBoolean(player.uuid, true)
+    event.server.scheduleInTicks(4, () => monstrosity.persistentData.putBoolean(player.uuid, false))
 })
 
 EntityEvents.death("cataclysm:netherite_monstrosity", event => {
@@ -52,11 +39,5 @@ EntityEvents.death("cataclysm:netherite_monstrosity", event => {
         if (entity == null || !entity.player) return
         entity.tell(Text.translate("pixelquest.bosses.netherite_monstrosity.death").gray())
     })
-    for (let i = 0; i < monstrosity_list.length; i++) {
-        if (monstrosity_list[i] == monstrosity.uuid) {
-            monstrosity_list.splice(i, i);
-            break;
-        }
-    }
 })
 
