@@ -1,0 +1,14 @@
+{
+  "Version": 1.0,
+  "attributemap": {
+    "sword/blade": {
+      "sword/knife": {
+        "config": {
+          "attributes": {
+            "parent": "bettercombat:dagger"
+          }
+        }
+      }
+    }
+  }
+}
