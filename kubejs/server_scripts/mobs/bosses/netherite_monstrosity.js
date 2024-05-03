@@ -6,29 +6,35 @@ EntityEvents.checkSpawn("cataclysm:netherite_monstrosity", event => {
     monstrosity.persistentData.rageStack = 0;
 })
 
-EntityEvents.spawned("cataclysm:netherite_monstrosity", event => {
-    let monstrosity = event.getEntity();
-})
-
 EntityEvents.hurt("cataclysm:netherite_monstrosity", event => {
     let monstrosity = event.getEntity();
     let player = event.source.getActual();
-    if (monstrosity.persistentData.getBoolean(player.uuid)) event.cancel();
     if (monstrosity == null || player == null) return
-    if (monstrosity.persistentData.rageStack % 5 == 4) {
-        let randomNumber = parseInt(Math.floor((Math.random() * 99) + 1) % 2)
-        player.attack(dSource.get().magic(), event.damage)
-        monstrosity.persistentData.rageStack = 0;
-        player.statusMessage = Text.translate("pixelquest.bosses.netherite_monstrosity.counter").lightPurple().bold().italic()
-        player.tell(Text.translate("pixelquest.bosses.netherite_monstrosity.roaring_" + randomNumber).gray())
+    let phase = monstrosity.nbt.getBoolean("is_Berserk")
+
+    if (!phase) {
+        if (monstrosity.persistentData.getBoolean(player.uuid)) event.cancel();
+        if (monstrosity.persistentData.rageStack % 5 == 4) {
+            let randomNumber = parseInt(Math.floor((Math.random() * 99) + 1) % 2)
+            player.attack(dSource.get().magic(), event.damage)
+            monstrosity.persistentData.rageStack = 0;
+            player.statusMessage = Text.translate("pixelquest.bosses.netherite_monstrosity.counter").lightPurple().bold().italic()
+            player.tell(Text.translate("pixelquest.bosses.netherite_monstrosity.roaring_" + randomNumber).gray())
+        }
+        else {
+            let reflectCount = parseInt(3 - monstrosity.persistentData.rageStack)
+            if (reflectCount == 0) player.statusMessage = Text.translate("pixelquest.bosses.netherite_monstrosity.warning_0")
+            else player.statusMessage = Text.translate("pixelquest.bosses.netherite_monstrosity.warning", reflectCount.toFixed(0))
+            monstrosity.persistentData.rageStack += 1;
+        }
+        monstrosity.persistentData.putBoolean(player.uuid, true)
     }
-    else {
-        let reflectCount = parseInt(3 - monstrosity.persistentData.rageStack)
-        if (reflectCount == 0) player.statusMessage = Text.translate("pixelquest.bosses.netherite_monstrosity.warning_0")
-        else player.statusMessage = Text.translate("pixelquest.bosses.netherite_monstrosity.warning", reflectCount.toFixed(0))
-        monstrosity.persistentData.rageStack += 1;
+    if (phase) {
+        if (!monstrosity.persistentData.getBoolean('p2')) {
+            monstrosity.health += 100;
+            monstrosity.persistentData.putBoolean('p2', true)
+        }
     }
-    monstrosity.persistentData.putBoolean(player.uuid, true)
     event.server.scheduleInTicks(4, () => monstrosity.persistentData.putBoolean(player.uuid, false))
 })
 
@@ -40,4 +46,3 @@ EntityEvents.death("cataclysm:netherite_monstrosity", event => {
         entity.tell(Text.translate("pixelquest.bosses.netherite_monstrosity.death").gray())
     })
 })
-

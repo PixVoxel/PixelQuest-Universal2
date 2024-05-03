@@ -10,6 +10,7 @@ EntityEvents.hurt("player", event => {
         if (curios.toString().contains('kubejs:pixelquest_netherite_emblem')) {
             if (player.persistentData.rageStack == null) player.persistentData.rageStack = 0;
             if (player.persistentData.rageStack % 5 == 4) {
+                let randomNumber = parseInt(Math.floor((Math.random() * 99) + 1) % 2)
                 attacker.attack(dSource.get().magic(), event.damage)
                 player.persistentData.rageStack = 0;
                 player.health += event.damage
