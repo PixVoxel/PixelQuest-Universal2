@@ -16,7 +16,7 @@ EntityEvents.hurt("player", event => {
                 player.health += event.damage
                 if (attacker.player) {
                     attacker.statusMessage = Text.translate("pixelquest.bosses.netherite_monstrosity.counter").lightPurple().bold().italic()
-                    attacker.tell(Text.translate("pixelquest.bosses.netherite_monstrosity.roaring_" + randomNumber).gray())
+                    attacker.tell(Text.translate("pixelquest.bosses.netherite_monstrosity.roaring_" + randomNumber).gray()).italic()
                 }
             }
             else {

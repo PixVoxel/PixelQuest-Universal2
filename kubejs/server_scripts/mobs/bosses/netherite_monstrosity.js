@@ -1,16 +1,31 @@
 let $DamageSources = Java.loadClass('net.minecraft.world.damagesource.DamageSources')
 let dSource = Utils.lazy(() => new $DamageSources(Utils.server.registryAccess()))
 
+let entities = new Array();
+
 EntityEvents.checkSpawn("cataclysm:netherite_monstrosity", event => {
-    let monstrosity = event.getEntity();
+    let entity = event.getEntity();
+    if (!entity.isLiving()) return;
+    /** @type {Internal.LivingEntity} */
+    let monstrosity = event.entity
     monstrosity.persistentData.rageStack = 0;
+})
+
+EntityEvents.spawned("cataclysm:netherite_monstrosity", event => {
+    let entity = event.getEntity();
+    if (!entity.isLiving()) return;
+    /** @type {Internal.LivingEntity} */
+    let monstrosity = event.entity
+    entities.push(monstrosity)
+    monstrosity.persistentData.index = entities.length - 1;
+    console.log(monstrosity.health)
 })
 
 EntityEvents.hurt("cataclysm:netherite_monstrosity", event => {
     let monstrosity = event.getEntity();
     let player = event.source.getActual();
     if (monstrosity == null || player == null) return
-    let phase = monstrosity.nbt.getBoolean("is_Berserk")
+    let phase = monstrosity.persistentData.getBoolean('p2')
 
     if (!phase) {
         if (monstrosity.persistentData.getBoolean(player.uuid)) event.cancel();
@@ -29,13 +44,23 @@ EntityEvents.hurt("cataclysm:netherite_monstrosity", event => {
         }
         monstrosity.persistentData.putBoolean(player.uuid, true)
     }
-    if (phase) {
-        if (!monstrosity.persistentData.getBoolean('p2')) {
-            monstrosity.health += 100;
-            monstrosity.persistentData.putBoolean('p2', true)
-        }
-    }
     event.server.scheduleInTicks(4, () => monstrosity.persistentData.putBoolean(player.uuid, false))
+})
+
+LevelEvents.tick(event => {
+
+    if (entities.length > 0) {
+        entities.forEach(monstrosity => {
+            if (!monstrosity.persistentData.getBoolean('p2')) {
+                if (monstrosity.nbt.getBoolean("is_Berserk")) {
+                    for (let i = 1; i <= 5; i++) {
+                        event.server.scheduleInTicks(i*10, () => monstrosity.health += 30)
+                    }
+                    monstrosity.persistentData.putBoolean('p2', true)
+                }
+            }
+        })
+    }
 })
 
 EntityEvents.death("cataclysm:netherite_monstrosity", event => {
@@ -45,4 +70,6 @@ EntityEvents.death("cataclysm:netherite_monstrosity", event => {
         if (entity == null || !entity.player) return
         entity.tell(Text.translate("pixelquest.bosses.netherite_monstrosity.death").gray())
     })
+    let i = monstrosity.persistentData.index
+    entities.slice(i, i)
 })
